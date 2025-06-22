@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0",
-    "firebase": "^11.9.1",
+    "firebase": "^10.14.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.522.0",
     "react": "^19.1.0",

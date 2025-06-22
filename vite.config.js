@@ -5,15 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
 
-  // Optimize dependencies
-  optimizeDeps: {
-    include: [
-      'firebase/app',
-      'firebase/auth',
-      'firebase/firestore',
-      'firebase/storage'
-    ]
-  },
+
+
+
 
   // Build optimizations for mobile performance
   build: {
@@ -82,6 +76,7 @@ export default defineConfig({
 
   // Define global constants
   define: {
-    __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '1.0.0')
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '1.0.0'),
+    global: 'globalThis'
   }
 })
