@@ -21,6 +21,8 @@ const NO_CACHE_PATTERNS = [
   /^https:\/\/nominatim\.openstreetmap\.org/,
   /^https:\/\/apis\.google\.com/,
   /^https:\/\/accounts\.google\.com/,
+  /^https:\/\/www\.gstatic\.com/,
+  /^https:\/\/.*\.googleapis\.com/,
 ]
 
 // Install event - cache static files

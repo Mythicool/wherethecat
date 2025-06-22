@@ -12,51 +12,51 @@
   "categories": ["lifestyle", "utilities", "social"],
   "icons": [
     {
-      "src": "/icons/icon-72x72.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY2N2VlYSI+PHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSA5VjdMMTUgMUwxMyAzVjdIMTFWM0w5IDFMM1Y3VjlIMVYxMUgzVjIxSDVWMTFIN1YyMUg5VjExSDExVjIxSDEzVjExSDE1VjIxSDE3VjExSDE5VjIxSDIxVjExSDIzVjlIMjFaIi8+PC9zdmc+",
       "sizes": "72x72",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-96x96.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY2N2VlYSI+PHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSA5VjdMMTUgMUwxMyAzVjdIMTFWM0w5IDFMM1Y3VjlIMVYxMUgzVjIxSDVWMTFIN1YyMUg5VjExSDExVjIxSDEzVjExSDE1VjIxSDE3VjExSDE5VjIxSDIxVjExSDIzVjlIMjFaIi8+PC9zdmc+",
       "sizes": "96x96",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-128x128.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY2N2VlYSI+PHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSA5VjdMMTUgMUwxMyAzVjdIMTFWM0w5IDFMM1Y3VjlIMVYxMUgzVjIxSDVWMTFIN1YyMUg5VjExSDExVjIxSDEzVjExSDE1VjIxSDE3VjExSDE5VjIxSDIxVjExSDIzVjlIMjFaIi8+PC9zdmc+",
       "sizes": "128x128",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-144x144.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY2N2VlYSI+PHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSA5VjdMMTUgMUwxMyAzVjdIMTFWM0w5IDFMM1Y3VjlIMVYxMUgzVjIxSDVWMTFIN1YyMUg5VjExSDExVjIxSDEzVjExSDE1VjIxSDE3VjExSDE5VjIxSDIxVjExSDIzVjlIMjFaIi8+PC9zdmc+",
       "sizes": "144x144",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-152x152.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY2N2VlYSI+PHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSA5VjdMMTUgMUwxMyAzVjdIMTFWM0w5IDFMM1Y3VjlIMVYxMUgzVjIxSDVWMTFIN1YyMUg5VjExSDExVjIxSDEzVjExSDE1VjIxSDE3VjExSDE5VjIxSDIxVjExSDIzVjlIMjFaIi8+PC9zdmc+",
       "sizes": "152x152",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY2N2VlYSI+PHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSA5VjdMMTUgMUwxMyAzVjdIMTFWM0w5IDFMM1Y3VjlIMVYxMUgzVjIxSDVWMTFIN1YyMUg5VjExSDExVjIxSDEzVjExSDE1VjIxSDE3VjExSDE5VjIxSDIxVjExSDIzVjlIMjFaIi8+PC9zdmc+",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-384x384.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY2N2VlYSI+PHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSA5VjdMMTUgMUwxMyAzVjdIMTFWM0w5IDFMM1Y3VjlIMVYxMUgzVjIxSDVWMTFIN1YyMUg5VjExSDExVjIxSDEzVjExSDE1VjIxSDE3VjExSDE5VjIxSDIxVjExSDIzVjlIMjFaIi8+PC9zdmc+",
       "sizes": "384x384",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzY2N2VlYSI+PHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSA5VjdMMTUgMUwxMyAzVjdIMTFWM0w5IDFMM1Y3VjlIMVYxMUgzVjIxSDVWMTFIN1YyMUg5VjExSDExVjIxSDEzVjExSDE1VjIxSDE3VjExSDE5VjIxSDIxVjExSDIzVjlIMjFaIi8+PC9zdmc+",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     }
   ],
@@ -81,25 +81,13 @@
       "name": "Report a Cat",
       "short_name": "Report",
       "description": "Quickly report a cat sighting",
-      "url": "/?action=report",
-      "icons": [
-        {
-          "src": "/icons/shortcut-report.png",
-          "sizes": "96x96"
-        }
-      ]
+      "url": "/?action=report"
     },
     {
       "name": "View Map",
       "short_name": "Map",
       "description": "View the cat sighting map",
-      "url": "/?view=map",
-      "icons": [
-        {
-          "src": "/icons/shortcut-map.png",
-          "sizes": "96x96"
-        }
-      ]
+      "url": "/?view=map"
     }
   ],
   "related_applications": [],
