@@ -8,6 +8,28 @@ import { geolocationService, GeolocationError } from '../services/geolocationSer
 import 'leaflet/dist/leaflet.css'
 import './CatMap.css'
 
+// Tile server configurations with fallbacks
+const TILE_SERVERS = [
+  {
+    name: 'OpenStreetMap',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: ['a', 'b', 'c']
+  },
+  {
+    name: 'OpenStreetMap DE',
+    url: 'https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: ['a', 'b', 'c']
+  },
+  {
+    name: 'CartoDB Positron',
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: ['a', 'b', 'c', 'd']
+  }
+]
+
 // Fix for default markers in React Leaflet
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -64,6 +86,59 @@ function MapClickHandler({ onMapClick }) {
     }
   })
   return null
+}
+
+// Fallback tile layer component with automatic server switching
+function FallbackTileLayer({ isMobile }) {
+  const [currentServerIndex, setCurrentServerIndex] = useState(0)
+  const [tileLoadErrors, setTileLoadErrors] = useState(0)
+
+  const currentServer = TILE_SERVERS[currentServerIndex]
+
+  // Switch to next server if too many tile errors
+  useEffect(() => {
+    if (tileLoadErrors > 5 && currentServerIndex < TILE_SERVERS.length - 1) {
+      console.log(`Switching to fallback tile server: ${TILE_SERVERS[currentServerIndex + 1].name}`)
+      setCurrentServerIndex(prev => prev + 1)
+      setTileLoadErrors(0)
+    }
+  }, [tileLoadErrors, currentServerIndex])
+
+  return (
+    <TileLayer
+      key={`${currentServer.name}-${currentServerIndex}`} // Force re-render on server change
+      attribution={currentServer.attribution}
+      url={currentServer.url}
+      // Mobile-optimized tile loading
+      maxZoom={18}
+      minZoom={3}
+      tileSize={256}
+      zoomOffset={0}
+      // Improve loading on mobile
+      updateWhenIdle={isMobile}
+      updateWhenZooming={!isMobile}
+      keepBuffer={isMobile ? 1 : 2}
+      // Better error handling and retry logic
+      errorTileUrl="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMnB4IiBmaWxsPSIjNzE4MDk2Ij5NYXAgdGlsZSBub3QgYXZhaWxhYmxlPC90ZXh0Pjwvc3ZnPg=="
+      // Subdomains for load balancing
+      subdomains={currentServer.subdomains}
+      // Crossorigin for better compatibility
+      crossOrigin={true}
+      // Event handlers for error tracking
+      eventHandlers={{
+        tileerror: (e) => {
+          console.log('Tile load error:', e)
+          setTileLoadErrors(prev => prev + 1)
+        },
+        tileload: () => {
+          // Reset error count on successful loads
+          if (tileLoadErrors > 0) {
+            setTileLoadErrors(prev => Math.max(0, prev - 1))
+          }
+        }
+      }}
+    />
+  )
 }
 
 function CatMap({ cats, onMapClick }) {
@@ -235,21 +310,7 @@ function CatMap({ cats, onMapClick }) {
         // Ensure proper rendering
         renderer={isMobile ? L.canvas() : L.svg()}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          // Mobile-optimized tile loading
-          maxZoom={18}
-          minZoom={3}
-          tileSize={256}
-          zoomOffset={0}
-          // Improve loading on mobile
-          updateWhenIdle={isMobile}
-          updateWhenZooming={!isMobile}
-          keepBuffer={isMobile ? 1 : 2}
-          // Error handling for mobile networks
-          errorTileUrl="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNHB4IiBmaWxsPSIjNzE4MDk2Ij5NYXAgdGlsZSBub3QgYXZhaWxhYmxlPC90ZXh0Pjwvc3ZnPg=="
-        />
+        <FallbackTileLayer isMobile={isMobile} />
         
         <MapClickHandler onMapClick={onMapClick} />
 
