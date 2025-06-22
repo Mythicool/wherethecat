@@ -1,11 +1,13 @@
-# Netlify Deployment Guide for "Where The Cat?"
+# 🚀 Netlify Deployment Guide for "Where The Cat?" - UPDATED FOR FIREBASE
 
 ## Overview
-This guide walks you through deploying your cat reporting application to Netlify with full geolocation and anonymous reporting functionality.
+This guide walks you through deploying your cat reporting application to Netlify with Firebase authentication, Firestore database, and full geolocation functionality.
 
 ## Prerequisites
-- ✅ Supabase database with migration applied
-- ✅ GitHub repository with your code
+- ✅ Firebase project configured (project ID: `new-thing-fd130`)
+- ✅ Firebase v10.14.1 installed (compatible with Vite - FIXED!)
+- ✅ Build process working locally (Firebase import issues resolved)
+- ✅ GitHub repository with your code: `https://github.com/Mythicool/wherethecat`
 - ✅ Netlify account (free tier works great)
 
 ## Step-by-Step Deployment

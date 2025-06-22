@@ -10,12 +10,12 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "build:prod": "npm run lint && vite build",
+    "build:netlify": "vite build --mode production",
     "serve": "vite preview --port 3000",
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "build:test": "chmod +x scripts/build-and-test.sh && ./scripts/build-and-test.sh",
-    "build:cloudflare": "vite build --mode production",
-    "deploy:netlify": "netlify deploy --prod --dir=dist",
-    "deploy:cloudflare": "npm run build:cloudflare"
+    "deploy:netlify": "npm run build:netlify && netlify deploy --prod --dir=dist",
+    "deploy:preview": "npm run build:netlify && netlify deploy --dir=dist"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -37,6 +37,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "rimraf": "^6.0.1",
     "terser": "^5.43.1",
     "vite": "^6.3.5"
   }

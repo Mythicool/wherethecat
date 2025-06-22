@@ -1,19 +1,22 @@
 [build]
   # Directory to change to before starting a build
   base = "."
-  
+
   # Directory that contains the deploy-ready HTML files and assets
   publish = "dist"
-  
+
   # Default build command
-  command = "npm run build"
+  command = "npm run build:netlify"
 
 [build.environment]
-  # Node.js version
-  NODE_VERSION = "18"
-  
+  # Node.js version (use LTS version for stability)
+  NODE_VERSION = "20"
+
   # NPM version (optional)
-  NPM_VERSION = "9"
+  NPM_VERSION = "10"
+
+  # Increase Node.js memory limit for large builds
+  NODE_OPTIONS = "--max-old-space-size=4096"
 
 # SPA (Single Page Application) redirect rules
 # This ensures that all routes are handled by React Router
