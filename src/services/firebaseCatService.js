@@ -56,20 +56,24 @@ export const firebaseCatService = {
   // Get cats by user
   async getCatsByUser(userId) {
     try {
+      console.log('Fetching cats for userId:', userId)
       const catsRef = collection(db, COLLECTIONS.CATS)
       const q = query(
         catsRef,
         where('userId', '==', userId),
         orderBy('createdAt', 'desc')
       )
-      
+
       const querySnapshot = await getDocs(q)
       const cats = []
-      
+
       querySnapshot.forEach((doc) => {
-        cats.push({ id: doc.id, ...doc.data() })
+        const catData = { id: doc.id, ...doc.data() }
+        console.log('Found cat for user:', catData)
+        cats.push(catData)
       })
-      
+
+      console.log(`Found ${cats.length} cats for user ${userId}`)
       return cats
     } catch (error) {
       console.error('Error fetching user cats:', error)
@@ -81,7 +85,8 @@ export const firebaseCatService = {
   async createCat(catData) {
     try {
       const user = authService.getCurrentUser()
-      
+      console.log('Creating cat with user:', user)
+
       // Prepare cat data
       const newCatData = {
         ...catData,
@@ -91,6 +96,8 @@ export const firebaseCatService = {
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
       }
+
+      console.log('Cat data to be saved:', newCatData)
 
       // Remove any undefined values
       Object.keys(newCatData).forEach(key => {

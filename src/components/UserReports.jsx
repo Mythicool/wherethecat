@@ -39,7 +39,9 @@ function UserReports({ onClose }) {
     try {
       setLoading(true)
       setError('')
+      console.log('Loading reports for user:', user.uid)
       const userReports = await firebaseCatService.getCatsByUser(user.uid)
+      console.log('User reports loaded:', userReports)
       setReports(userReports)
     } catch (err) {
       console.error('Error loading user reports:', err)
@@ -141,9 +143,9 @@ function UserReports({ onClose }) {
           <div className="reports-list">
             {reports.map((report) => (
               <div key={report.id} className="report-item">
-                {report.photo_urls && report.photo_urls.length > 0 && (
+                {report.photoUrls && report.photoUrls.length > 0 && (
                   <div className="report-photo">
-                    <img src={report.photo_urls[0]} alt={report.name || 'Cat'} />
+                    <img src={report.photoUrls[0]} alt={report.name || 'Cat'} />
                   </div>
                 )}
                 
@@ -166,7 +168,7 @@ function UserReports({ onClose }) {
                     <div className="report-meta-item">
                       <Calendar size={14} />
                       <span>
-                        {formatDistanceToNow(new Date(report.created_at))}
+                        {formatDistanceToNow(new Date(report.createdAt.toDate()))}
                       </span>
                     </div>
                     <div className="report-meta-item">
@@ -222,9 +224,9 @@ function UserReports({ onClose }) {
                 </button>
               </div>
               
-              {selectedReport.photo_urls && selectedReport.photo_urls.length > 0 && (
+              {selectedReport.photoUrls && selectedReport.photoUrls.length > 0 && (
                 <div className="report-detail-photos">
-                  {selectedReport.photo_urls.map((url, index) => (
+                  {selectedReport.photoUrls.map((url, index) => (
                     <img key={index} src={url} alt={`Cat photo ${index + 1}`} />
                   ))}
                 </div>
@@ -234,10 +236,10 @@ function UserReports({ onClose }) {
                 <p><strong>Description:</strong> {selectedReport.description || 'No description'}</p>
                 <p><strong>Color:</strong> {selectedReport.color || 'Not specified'}</p>
                 <p><strong>Size:</strong> {selectedReport.size || 'Not specified'}</p>
-                <p><strong>Date Spotted:</strong> {selectedReport.date_spotted || 'Not specified'}</p>
+                <p><strong>Date Spotted:</strong> {selectedReport.dateSpotted || 'Not specified'}</p>
                 <p><strong>Status:</strong> {getStatusLabel(selectedReport.status)}</p>
                 <p><strong>Location:</strong> {selectedReport.latitude.toFixed(6)}, {selectedReport.longitude.toFixed(6)}</p>
-                <p><strong>Reported:</strong> {new Date(selectedReport.created_at).toLocaleString()}</p>
+                <p><strong>Reported:</strong> {selectedReport.createdAt ? new Date(selectedReport.createdAt.toDate()).toLocaleString() : 'Not specified'}</p>
               </div>
             </div>
           </div>

@@ -355,16 +355,16 @@ function CatMap({ cats, onMapClick }) {
             >
             <Popup>
               <div className="cat-popup">
-                {cat.photo_urls && cat.photo_urls.length > 0 && (
+                {cat.photoUrls && cat.photoUrls.length > 0 && (
                   <div className="cat-photos">
                     <img
-                      src={cat.photo_urls[0]}
+                      src={cat.photoUrls[0]}
                       alt={cat.name || 'Cat photo'}
                       className="cat-popup-photo"
                     />
-                    {cat.photo_urls.length > 1 && (
+                    {cat.photoUrls.length > 1 && (
                       <div className="photo-count">
-                        +{cat.photo_urls.length - 1} more
+                        +{cat.photoUrls.length - 1} more
                       </div>
                     )}
                   </div>
@@ -387,13 +387,13 @@ function CatMap({ cats, onMapClick }) {
                       <strong>Size:</strong> {cat.size}
                     </div>
                   )}
-                  {cat.date_spotted && (
+                  {cat.dateSpotted && (
                     <div className="cat-detail">
-                      <strong>Date Spotted:</strong> {formatDate(cat.date_spotted)}
+                      <strong>Date Spotted:</strong> {formatDate(cat.dateSpotted)}
                     </div>
                   )}
                   <div className="cat-detail">
-                    <strong>Reported:</strong> {formatDate(cat.created_at)}
+                    <strong>Reported:</strong> {formatDate(cat.createdAt?.toDate?.() || cat.createdAt)}
                   </div>
                   <div className="cat-detail">
                     <strong>Reported by:</strong>

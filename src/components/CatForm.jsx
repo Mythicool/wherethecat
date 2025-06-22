@@ -13,7 +13,7 @@ function CatForm({ location, onSubmit, onClose }) {
     description: '',
     color: '',
     size: '',
-    date_spotted: new Date().toISOString().split('T')[0] // Today's date
+    dateSpotted: new Date().toISOString().split('T')[0] // Today's date
   })
   const [photos, setPhotos] = useState([])
   const [uploading, setUploading] = useState(false)
@@ -196,12 +196,8 @@ function CatForm({ location, onSubmit, onClose }) {
       const catData = {
         ...formData,
         photoUrls: photoUrls, // Use camelCase for Firebase
-        dateSpotted: formData.date_spotted, // Convert to camelCase
         location: currentLocation // Include the current location (which may be from geolocation)
       }
-
-      // Remove the snake_case field
-      delete catData.date_spotted
 
       await onSubmit(catData)
 
@@ -378,12 +374,12 @@ function CatForm({ location, onSubmit, onClose }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="date_spotted">Date Spotted</label>
+            <label htmlFor="dateSpotted">Date Spotted</label>
             <input
               type="date"
-              id="date_spotted"
-              name="date_spotted"
-              value={formData.date_spotted}
+              id="dateSpotted"
+              name="dateSpotted"
+              value={formData.dateSpotted}
               onChange={handleChange}
               max={new Date().toISOString().split('T')[0]}
             />
