@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { X, LogIn, UserPlus } from 'lucide-react'
 import { useFirebaseAuth } from '../../contexts/FirebaseAuthContext'
 import './AuthModal.css'
@@ -6,8 +6,70 @@ import './AuthModal.css'
 function AuthModal({ isOpen, onClose }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+  const [position, setPosition] = useState({ x: 0, y: 0 })
 
+  const modalRef = useRef(null)
+  const headerRef = useRef(null)
   const { signInWithGoogle, signInAnonymously } = useFirebaseAuth()
+
+  // Reset position when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setPosition({ x: 0, y: 0 })
+      setIsDragging(false)
+    }
+  }, [isOpen])
+
+  // Drag functionality
+  const handleMouseDown = (e) => {
+    // Only enable dragging on desktop (not mobile)
+    if (window.innerWidth <= 768) return
+
+    const rect = modalRef.current.getBoundingClientRect()
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    })
+    setIsDragging(true)
+    e.preventDefault()
+  }
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return
+
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    const modalWidth = modalRef.current.offsetWidth
+    const modalHeight = modalRef.current.offsetHeight
+
+    let newX = e.clientX - dragOffset.x - viewportWidth / 2 + modalWidth / 2
+    let newY = e.clientY - dragOffset.y - viewportHeight / 2 + modalHeight / 2
+
+    // Constrain to viewport
+    const margin = 20
+    newX = Math.max(-viewportWidth / 2 + margin, Math.min(viewportWidth / 2 - modalWidth - margin, newX))
+    newY = Math.max(-viewportHeight / 2 + margin, Math.min(viewportHeight / 2 - modalHeight - margin, newY))
+
+    setPosition({ x: newX, y: newY })
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  // Add global mouse event listeners
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [isDragging, dragOffset])
 
   const handleGoogleSignIn = async () => {
     try {
@@ -41,8 +103,21 @@ function AuthModal({ isOpen, onClose }) {
 
   return (
     <div className="auth-modal-overlay" onClick={onClose}>
-      <div className="auth-modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="auth-modal-header">
+      <div
+        ref={modalRef}
+        className="auth-modal-content"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          transform: `translate(${position.x}px, ${position.y}px)`,
+          cursor: isDragging ? 'grabbing' : 'default'
+        }}
+      >
+        <div
+          ref={headerRef}
+          className="auth-modal-header"
+          onMouseDown={handleMouseDown}
+          style={{ cursor: window.innerWidth > 768 ? (isDragging ? 'grabbing' : 'grab') : 'default' }}
+        >
           <h2>Sign In to Where The Cat?</h2>
           <button className="auth-close-button" onClick={onClose}>
             <X className="auth-close-icon" />

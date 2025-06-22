@@ -16,9 +16,11 @@ const API_CACHE_PATTERNS = [
   /^https:\/\/firestore\.googleapis\.com/,
 ]
 
-// API endpoints that should NOT be cached (CORS issues)
+// API endpoints that should NOT be cached (CORS/CSP issues)
 const NO_CACHE_PATTERNS = [
   /^https:\/\/nominatim\.openstreetmap\.org/,
+  /^https:\/\/apis\.google\.com/,
+  /^https:\/\/accounts\.google\.com/,
 ]
 
 // Install event - cache static files

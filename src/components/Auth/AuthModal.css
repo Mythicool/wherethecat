@@ -10,6 +10,8 @@
   justify-content: center;
   z-index: 3000;
   padding: 20px;
+  /* Ensure modal is always visible */
+  overflow: auto;
 }
 
 .auth-modal-content {
@@ -20,6 +22,13 @@
   max-width: 420px;
   max-height: 90vh;
   overflow-y: auto;
+  position: relative;
+  /* Draggable cursor for header */
+  cursor: default;
+  /* Ensure proper positioning */
+  margin: auto;
+  /* Prevent modal from going off-screen */
+  min-height: fit-content;
 }
 
 .auth-modal-header {
@@ -29,6 +38,14 @@
   padding: 24px 24px 0 24px;
   border-bottom: 1px solid #e2e8f0;
   margin-bottom: 24px;
+  /* Make header draggable */
+  cursor: move;
+  cursor: grab;
+  user-select: none;
+}
+
+.auth-modal-header:active {
+  cursor: grabbing;
 }
 
 .auth-modal-header h2 {
@@ -188,20 +205,152 @@
   color: #3182ce;
 }
 
+/* Authentication Options Styles */
+.auth-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.auth-option-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #2d3748;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-option-button:hover:not(:disabled) {
+  border-color: #cbd5e0;
+  background: #f7fafc;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.auth-option-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.auth-option-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.google-button {
+  border-color: #4285f4;
+  color: #4285f4;
+}
+
+.google-button:hover:not(:disabled) {
+  background: #f8f9ff;
+  border-color: #3367d6;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.anonymous-button {
+  border-color: #718096;
+  color: #4a5568;
+}
+
+.anonymous-button:hover:not(:disabled) {
+  background: #f7fafc;
+  border-color: #4a5568;
+}
+
+.auth-button-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.auth-divider span {
+  padding: 0 16px;
+  color: #718096;
+  font-size: 14px;
+  background: white;
+}
+
+.auth-info {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.auth-info-text {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #4a5568;
+  line-height: 1.5;
+}
+
+.auth-info-text:last-child {
+  margin-bottom: 0;
+}
+
+.auth-info-text strong {
+  color: #2d3748;
+  font-weight: 600;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .auth-modal-overlay {
     padding: 10px;
+    /* Ensure modal is always centered on mobile */
+    align-items: center;
+    justify-content: center;
   }
-  
+
   .auth-modal-content {
     max-height: 95vh;
+    width: calc(100% - 20px);
+    max-width: 380px;
+    /* Disable dragging on mobile for better touch experience */
+    position: static;
   }
-  
+
   .auth-modal-header {
     padding: 20px 20px 0 20px;
+    /* Disable drag cursor on mobile */
+    cursor: default;
   }
-  
+
   .auth-content {
     padding: 20px;
   }
@@ -209,8 +358,52 @@
   .auth-form {
     padding: 0;
   }
-  
+
   .auth-switch {
     padding: 0 20px 20px 20px;
+  }
+
+  .auth-option-button {
+    padding: 16px 20px;
+    font-size: 16px;
+    /* Ensure buttons are touch-friendly */
+    min-height: 48px;
+  }
+
+  .auth-info {
+    margin-top: 16px;
+    padding: 14px;
+  }
+
+  .auth-info-text {
+    font-size: 13px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .auth-modal-overlay {
+    padding: 5px;
+  }
+
+  .auth-modal-content {
+    width: calc(100% - 10px);
+    max-height: 98vh;
+  }
+
+  .auth-modal-header {
+    padding: 16px 16px 0 16px;
+  }
+
+  .auth-modal-header h2 {
+    font-size: 20px;
+  }
+
+  .auth-content {
+    padding: 16px;
+  }
+
+  .auth-switch {
+    padding: 0 16px 16px 16px;
   }
 }
