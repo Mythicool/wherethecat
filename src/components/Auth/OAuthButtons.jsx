@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Github } from 'lucide-react'
-import { supabase } from '../../lib/supabase'
 import { firebaseService } from '../../services/firebaseService'
 import './OAuthButtons.css'
 

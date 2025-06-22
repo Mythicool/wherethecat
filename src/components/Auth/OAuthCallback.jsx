@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../../lib/supabase'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import './OAuthCallback.css'
 
 function OAuthCallback() {
@@ -9,28 +9,33 @@ function OAuthCallback() {
   useEffect(() => {
     const handleOAuthCallback = async () => {
       try {
-        // Handle standard OAuth callback (for GitHub, etc.)
-        const { data, error } = await supabase.auth.getSession()
+        const auth = getAuth()
 
-        if (error) {
-          console.error('OAuth callback error:', error)
-          setError(error.message)
-          setStatus('error')
-          return
-        }
+        // Listen for auth state changes
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          if (user) {
+            console.log('OAuth authentication successful:', user)
+            setStatus('success')
 
-        if (data.session) {
-          console.log('OAuth authentication successful:', data.session.user)
-          setStatus('success')
+            // Redirect to main app after a brief delay
+            setTimeout(() => {
+              window.location.href = '/'
+            }, 2000)
+          } else {
+            setError('No user found')
+            setStatus('error')
+          }
+        })
 
-          // Redirect to main app after a brief delay
-          setTimeout(() => {
-            window.location.href = '/'
-          }, 2000)
-        } else {
-          setError('No session found')
-          setStatus('error')
-        }
+        // Clean up listener after 10 seconds
+        setTimeout(() => {
+          unsubscribe()
+          if (status === 'processing') {
+            setError('Authentication timeout')
+            setStatus('error')
+          }
+        }, 10000)
+
       } catch (err) {
         console.error('Unexpected OAuth callback error:', err)
         setError('Authentication failed')
