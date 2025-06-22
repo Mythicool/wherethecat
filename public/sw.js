@@ -1,7 +1,7 @@
 // Service Worker for Where The Cat? PWA
-const CACHE_NAME = 'wherethecat-v1.0.0'
-const STATIC_CACHE_NAME = 'wherethecat-static-v1.0.0'
-const DYNAMIC_CACHE_NAME = 'wherethecat-dynamic-v1.0.0'
+const CACHE_NAME = 'wherethecat-v1.0.1'
+const STATIC_CACHE_NAME = 'wherethecat-static-v1.0.1'
+const DYNAMIC_CACHE_NAME = 'wherethecat-dynamic-v1.0.1'
 
 // Files to cache for offline functionality
 const STATIC_FILES = [
@@ -27,6 +27,11 @@ const NO_CACHE_PATTERNS = [
   /^https:\/\/.*\.googleapis\.com/,
   /^https:\/\/.*\.firebaseapp\.com/,
   /^https:\/\/securetoken\.googleapis\.com/,
+  /^https:\/\/identitytoolkit\.googleapis\.com/,
+  /^https:\/\/firestore\.googleapis\.com/,
+  // Add any Google API script loading patterns
+  /apis\.google\.com.*onload=/,
+  /gstatic\.com/,
 ]
 
 // Install event - cache static files
@@ -78,17 +83,22 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event
   const url = new URL(request.url)
-  
+
   // Skip non-GET requests
   if (request.method !== 'GET') {
     return
   }
-  
+
   // Skip chrome-extension and other non-http requests
   if (!request.url.startsWith('http')) {
     return
   }
-  
+
+  // Skip service worker for problematic APIs (CORS/CSP issues) - do this early
+  if (shouldSkipCache(request)) {
+    return // Let the browser handle it directly
+  }
+
   event.respondWith(
     handleFetch(request)
   )
@@ -98,11 +108,6 @@ async function handleFetch(request) {
   const url = new URL(request.url)
 
   try {
-    // Skip service worker for problematic APIs (CORS issues)
-    if (shouldSkipCache(request)) {
-      return await fetch(request)
-    }
-
     // Strategy 1: Static files - Cache First
     if (isStaticFile(request)) {
       return await cacheFirst(request, STATIC_CACHE_NAME)
@@ -120,21 +125,21 @@ async function handleFetch(request) {
 
     // Strategy 4: Everything else - Network First
     return await networkFirst(request, DYNAMIC_CACHE_NAME)
-    
+
   } catch (error) {
     console.error('Service Worker: Fetch error:', error)
-    
+
     // Return offline page for navigation requests
     if (request.mode === 'navigate') {
       return await getOfflinePage()
     }
-    
+
     // Return cached version if available
     const cachedResponse = await caches.match(request)
     if (cachedResponse) {
       return cachedResponse
     }
-    
+
     // Return network error
     return new Response('Network error', {
       status: 408,
