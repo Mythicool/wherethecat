@@ -1,0 +1,259 @@
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  color: #ffd700;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.app-subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.nav-button.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.nav-button .header-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.header-link {
+  color: white;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.header-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.support-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.heart-icon {
+  width: 16px;
+  height: 16px;
+  color: #ff6b6b;
+}
+
+.auth-button,
+.user-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.auth-button:hover,
+.user-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.user-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-badge {
+  color: #ffd700;
+  margin-left: 4px;
+}
+
+/* Mobile-first responsive header */
+@media (max-width: 480px) {
+  .header {
+    padding: 12px 0;
+  }
+
+  .header-content {
+    padding: 0 16px;
+    flex-direction: row; /* Keep horizontal on mobile */
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo-section {
+    gap: 8px;
+  }
+
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .app-title {
+    font-size: 18px;
+  }
+
+  .app-subtitle {
+    display: none; /* Hide subtitle on small screens */
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .nav-buttons {
+    gap: 4px;
+    padding: 2px;
+  }
+
+  .nav-button span {
+    display: none; /* Show only icons on mobile */
+  }
+
+  .nav-button {
+    padding: 8px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .support-text span {
+    display: none; /* Show only heart icon */
+  }
+
+  .user-name {
+    display: none; /* Hide username on mobile */
+  }
+
+  .auth-button span {
+    display: none; /* Show only icon */
+  }
+
+  .auth-button, .user-button {
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 16px;
+  }
+}
+
+/* Tablets */
+@media (min-width: 481px) and (max-width: 768px) {
+  .header-content {
+    padding: 0 20px;
+  }
+
+  .app-title {
+    font-size: 20px;
+  }
+
+  .header-actions {
+    gap: 16px;
+  }
+
+  .support-text span {
+    display: none;
+  }
+
+  .user-name {
+    max-width: 100px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .header-content {
+    padding: 0 20px;
+  }
+
+  .support-text span {
+    display: inline;
+  }
+
+  .user-name {
+    display: inline;
+    max-width: 120px;
+  }
+
+  .auth-button span {
+    display: inline;
+  }
+}

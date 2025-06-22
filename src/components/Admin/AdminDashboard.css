@@ -1,0 +1,255 @@
+.admin-dashboard {
+  min-height: 100vh;
+  background: #f8f9fa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.admin-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 16px;
+}
+
+.admin-loading .loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e2e8f0;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.admin-access-denied {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+  padding: 40px 20px;
+  color: #4a5568;
+}
+
+.admin-access-denied svg {
+  color: #e53e3e;
+  margin-bottom: 16px;
+}
+
+.admin-access-denied h2 {
+  margin: 0 0 8px 0;
+  color: #2d3748;
+}
+
+.admin-access-denied p {
+  margin: 4px 0;
+  color: #718096;
+}
+
+.admin-header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0;
+}
+
+.admin-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+}
+
+.admin-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-title svg {
+  color: #667eea;
+}
+
+.admin-title h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.admin-header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.admin-refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.admin-refresh-btn:hover {
+  background: #5a67d8;
+}
+
+.admin-stats-bar {
+  display: flex;
+  padding: 16px 24px;
+  background: #f7fafc;
+  border-top: 1px solid #e2e8f0;
+  gap: 32px;
+}
+
+.admin-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.admin-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2d3748;
+  line-height: 1;
+}
+
+.admin-stat-label {
+  font-size: 12px;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+.admin-nav {
+  display: flex;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  overflow-x: auto;
+}
+
+.admin-nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 24px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #718096;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.admin-nav-tab:hover {
+  color: #4a5568;
+  background: #f7fafc;
+}
+
+.admin-nav-tab.active {
+  color: #667eea;
+  border-bottom-color: #667eea;
+  background: #f7fafc;
+}
+
+.admin-nav-tab svg {
+  flex-shrink: 0;
+}
+
+.admin-content {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-settings {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-settings h2 {
+  margin: 0 0 16px 0;
+  color: #2d3748;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .admin-header-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .admin-stats-bar {
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-around;
+  }
+
+  .admin-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-nav-tab {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .admin-content {
+    padding: 16px;
+  }
+
+  .admin-title h1 {
+    font-size: 20px;
+  }
+
+  .admin-stat-value {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header-content {
+    padding: 16px;
+  }
+
+  .admin-stats-bar {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .admin-nav-tab {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .admin-nav-tab span {
+    display: none;
+  }
+
+  .admin-content {
+    padding: 12px;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

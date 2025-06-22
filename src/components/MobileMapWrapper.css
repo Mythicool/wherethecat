@@ -1,0 +1,74 @@
+.mobile-map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.mobile-map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #718096;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+.mobile-map-loading .spinning {
+  animation: spin 1s linear infinite;
+}
+
+.mobile-map-content {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-map-content.loading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mobile-map-content.ready {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  .mobile-map-wrapper {
+    /* Ensure proper rendering on mobile */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  .mobile-map-content {
+    /* Force hardware acceleration */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .mobile-map-wrapper {
+    /* Optimize for retina displays */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
