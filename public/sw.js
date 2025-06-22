@@ -14,6 +14,10 @@ const STATIC_FILES = [
 // API endpoints that should be cached
 const API_CACHE_PATTERNS = [
   /^https:\/\/firestore\.googleapis\.com/,
+]
+
+// API endpoints that should NOT be cached (CORS issues)
+const NO_CACHE_PATTERNS = [
   /^https:\/\/nominatim\.openstreetmap\.org/,
 ]
 
@@ -84,23 +88,28 @@ self.addEventListener('fetch', (event) => {
 
 async function handleFetch(request) {
   const url = new URL(request.url)
-  
+
   try {
+    // Skip service worker for problematic APIs (CORS issues)
+    if (shouldSkipCache(request)) {
+      return await fetch(request)
+    }
+
     // Strategy 1: Static files - Cache First
     if (isStaticFile(request)) {
       return await cacheFirst(request, STATIC_CACHE_NAME)
     }
-    
+
     // Strategy 2: API calls - Network First with cache fallback
     if (isAPICall(request)) {
       return await networkFirst(request, DYNAMIC_CACHE_NAME)
     }
-    
+
     // Strategy 3: Images and assets - Cache First
     if (isAsset(request)) {
       return await cacheFirst(request, DYNAMIC_CACHE_NAME)
     }
-    
+
     // Strategy 4: Everything else - Network First
     return await networkFirst(request, DYNAMIC_CACHE_NAME)
     
@@ -188,6 +197,10 @@ function isStaticFile(request) {
 
 function isAPICall(request) {
   return API_CACHE_PATTERNS.some(pattern => pattern.test(request.url))
+}
+
+function shouldSkipCache(request) {
+  return NO_CACHE_PATTERNS.some(pattern => pattern.test(request.url))
 }
 
 function isAsset(request) {
