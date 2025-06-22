@@ -6,7 +6,6 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged
 } from 'firebase/auth'
-import { supabase } from '../lib/supabase'
 
 class FirebaseService {
   constructor() {

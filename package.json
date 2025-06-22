@@ -18,7 +18,6 @@
     "deploy:cloudflare": "npm run build:cloudflare"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.50.0",
     "date-fns": "^4.1.0",
     "firebase": "^11.9.1",
     "leaflet": "^1.9.4",

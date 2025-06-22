@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
-import { 
-  BarChart3, 
-  TrendingUp, 
-  Users, 
+import {
+  BarChart3,
+  TrendingUp,
+  Users,
   MapPin,
   Calendar,
   Activity
 } from 'lucide-react'
-import { supabase } from '../../lib/supabase'
+import { firebaseCatService } from '../../services/firebaseCatService'
 import './AdminStats.css'
 
 function AdminStats({ stats }) {

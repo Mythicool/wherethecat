@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react'
-import { 
-  Users, 
-  MapPin, 
-  Settings, 
-  BarChart3, 
+import {
+  Users,
+  MapPin,
+  Settings,
+  BarChart3,
   Shield,
   Search,
   Filter,
   Download,
   RefreshCw
 } from 'lucide-react'
-import { useAuth } from '../../contexts/AuthContext'
+import { useFirebaseAuth } from '../../contexts/FirebaseAuthContext'
 import CatManagement from './CatManagement'
 import UserManagement from './UserManagement'
 import AdminStats from './AdminStats'
-import { supabase } from '../../lib/supabase'
+import { firebaseCatService } from '../../services/firebaseCatService'
 import './AdminDashboard.css'
 
 function AdminDashboard() {
-  const { user, profile } = useAuth()
+  const { user, userProfile } = useFirebaseAuth()
   const [activeTab, setActiveTab] = useState('cats')
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -32,29 +32,18 @@ function AdminDashboard() {
   useEffect(() => {
     checkAdminStatus()
     loadStats()
-  }, [user, profile])
+  }, [user, userProfile])
 
   const checkAdminStatus = async () => {
-    if (!user || !profile) {
+    if (!user || !userProfile) {
       setIsAdmin(false)
       setLoading(false)
       return
     }
 
     try {
-      // Check if user is admin
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('is_admin')
-        .eq('id', user.id)
-        .single()
-
-      if (error) {
-        console.error('Error checking admin status:', error)
-        setIsAdmin(false)
-      } else {
-        setIsAdmin(data?.is_admin || false)
-      }
+      // Check if user is admin from Firebase user profile
+      setIsAdmin(userProfile?.isAdmin || false)
     } catch (error) {
       console.error('Error checking admin status:', error)
       setIsAdmin(false)
@@ -65,36 +54,24 @@ function AdminDashboard() {
 
   const loadStats = async () => {
     try {
-      // Get cat statistics
-      const { data: cats, error: catsError } = await supabase
-        .from('cats')
-        .select('id, status, created_at')
-
-      if (catsError) throw catsError
-
-      // Get user statistics
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id, created_at')
-
-      if (profilesError) throw profilesError
+      // Get cat statistics from Firebase
+      const cats = await firebaseCatService.getAllCats()
 
       // Calculate stats
       const totalCats = cats?.length || 0
       const activeCats = cats?.filter(cat => cat.status === 'active').length || 0
-      const totalUsers = profiles?.length || 0
-      
+
       // Recent reports (last 7 days)
       const weekAgo = new Date()
       weekAgo.setDate(weekAgo.getDate() - 7)
-      const recentReports = cats?.filter(cat => 
-        new Date(cat.created_at) > weekAgo
+      const recentReports = cats?.filter(cat =>
+        new Date(cat.createdAt?.toDate?.() || cat.createdAt) > weekAgo
       ).length || 0
 
       setStats({
         totalCats,
         activeCats,
-        totalUsers,
+        totalUsers: 0, // TODO: Implement user count from Firebase Auth
         recentReports
       })
     } catch (error) {

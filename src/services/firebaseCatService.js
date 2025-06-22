@@ -23,23 +23,29 @@ import { db, storage, COLLECTIONS, STORAGE_PATHS } from '../lib/firebase'
 import { authService } from './authService'
 
 export const firebaseCatService = {
-  // Get all active cats
-  async getAllCats() {
+  // Get all active cats with optional limit for performance
+  async getAllCats(limitCount = 100) {
     try {
       const catsRef = collection(db, COLLECTIONS.CATS)
-      const q = query(
-        catsRef, 
+      let q = query(
+        catsRef,
         where('status', '==', 'active'),
         orderBy('createdAt', 'desc')
       )
-      
+
+      // Add limit for better performance
+      if (limitCount) {
+        q = query(q, limit(limitCount))
+      }
+
       const querySnapshot = await getDocs(q)
       const cats = []
-      
+
       querySnapshot.forEach((doc) => {
         cats.push({ id: doc.id, ...doc.data() })
       })
-      
+
+      console.log(`Loaded ${cats.length} cats from Firebase`)
       return cats
     } catch (error) {
       console.error('Error fetching cats:', error)
@@ -216,18 +222,24 @@ export const firebaseCatService = {
       // Add ordering
       q = query(q, orderBy('createdAt', 'desc'))
 
-      // Add limit if specified
-      if (filters.limit) {
-        q = query(q, limit(filters.limit))
-      }
+      // Add limit for performance (default to 100 if not specified)
+      const limitCount = filters.limit || 100
+      q = query(q, limit(limitCount))
 
-      return onSnapshot(q, (querySnapshot) => {
-        const cats = []
-        querySnapshot.forEach((doc) => {
-          cats.push({ id: doc.id, ...doc.data() })
-        })
-        callback(cats)
-      })
+      return onSnapshot(q,
+        (querySnapshot) => {
+          const cats = []
+          querySnapshot.forEach((doc) => {
+            cats.push({ id: doc.id, ...doc.data() })
+          })
+          console.log('Firebase real-time update: received', cats.length, 'cats')
+          callback(cats)
+        },
+        (error) => {
+          console.error('Firebase real-time listener error:', error)
+          // You could call an error callback here if needed
+        }
+      )
     } catch (error) {
       console.error('Error setting up cats snapshot listener:', error)
       throw error

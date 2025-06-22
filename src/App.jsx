@@ -1,21 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense, useCallback, useMemo } from 'react'
 import { MapPin, Heart, Info, AlertCircle, Filter } from 'lucide-react'
 import { FirebaseAuthProvider, useFirebaseAuth } from './contexts/FirebaseAuthContext'
 import { firebaseCatService } from './services/firebaseCatService'
-import CatMap from './components/CatMap'
-import CatForm from './components/CatForm'
 import Header from './components/Header'
-import AuthModal from './components/Auth/AuthModal'
-import SearchFilters from './components/SearchFilters'
-import SetupNotification from './components/SetupNotification'
 import MobileDebugInfo from './components/MobileDebugInfo'
-import AdminDashboard from './components/Admin/AdminDashboard'
+import LoadingSkeleton from './components/LoadingSkeleton'
+import { measureAsync, perfMonitor, initWebVitals } from './utils/performance'
 import './App.css'
+
+// Lazy load heavy components
+const CatMap = lazy(() => import('./components/CatMap'))
+const CatForm = lazy(() => import('./components/CatForm'))
+const AuthModal = lazy(() => import('./components/Auth/AuthModal'))
+const SearchFilters = lazy(() => import('./components/SearchFilters'))
+const AdminDashboard = lazy(() => import('./components/Admin/AdminDashboard'))
 
 function AppContent() {
   const { user, userProfile, loading: authLoading } = useFirebaseAuth()
   const [cats, setCats] = useState([])
-  const [filteredCats, setFilteredCats] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -24,7 +26,6 @@ function AppContent() {
   const [showFilters, setShowFilters] = useState(false)
   const [activeFilters, setActiveFilters] = useState({})
   const [currentView, setCurrentView] = useState('map') // 'map' or 'admin'
-  const [unsubscribe, setUnsubscribe] = useState(null)
 
   // Load cats from Firebase on component mount
   useEffect(() => {
@@ -33,22 +34,76 @@ function AppContent() {
 
   // Set up real-time subscription to Firebase
   useEffect(() => {
+    console.log('Setting up Firebase real-time listener...')
     const unsubscribeFunction = firebaseCatService.onCatsSnapshot(
       (updatedCats) => {
-        console.log('Real-time update from Firebase:', updatedCats)
+        console.log('Real-time update from Firebase:', updatedCats.length, 'cats received')
+        console.log('First cat sample:', updatedCats[0])
         setCats(updatedCats)
-        setFilteredCats(updatedCats)
+
+        // Apply current filters to the updated cats
+        applyFiltersToUpdatedCats(updatedCats)
       },
       { status: 'active' }
     )
 
-    setUnsubscribe(() => unsubscribeFunction)
+
 
     return () => {
+      console.log('Cleaning up Firebase real-time listener...')
       if (unsubscribeFunction) {
         unsubscribeFunction()
       }
     }
+  }, [activeFilters]) // Re-subscribe when filters change
+
+  // Initial load and performance monitoring setup
+  useEffect(() => {
+    // Initialize performance monitoring
+    initWebVitals()
+
+    // Load cats data
+    loadCats()
+
+    // Log performance info after initial load
+    setTimeout(() => {
+      console.log('📊 Performance Summary:', perfMonitor.getAllMeasures())
+    }, 2000)
+  }, [])
+
+  // Memoized filtered cats calculation
+  const filteredCats = useMemo(() => {
+    // Check if any filters are active
+    const hasActiveFilters = Object.values(activeFilters).some(value =>
+      value !== '' && value !== 10
+    )
+
+    if (!hasActiveFilters) {
+      return cats
+    }
+
+    // Apply filters
+    let filtered = [...cats]
+
+    if (activeFilters.color && activeFilters.color !== '') {
+      filtered = filtered.filter(cat =>
+        cat.color?.toLowerCase().includes(activeFilters.color.toLowerCase())
+      )
+    }
+
+    if (activeFilters.size && activeFilters.size !== '') {
+      filtered = filtered.filter(cat =>
+        cat.size?.toLowerCase() === activeFilters.size.toLowerCase()
+      )
+    }
+
+    return filtered
+  }, [cats, activeFilters])
+
+  // Helper function to apply filters to cats
+  const applyFiltersToUpdatedCats = useCallback((cats) => {
+    // Update the cats state, filteredCats will be recalculated automatically
+    setCats(cats)
   }, [])
 
   const loadCats = async () => {
@@ -56,9 +111,8 @@ function AppContent() {
       setLoading(true)
       setError(null)
 
-      const data = await firebaseCatService.getAllCats()
+      const data = await measureAsync('loadCats', () => firebaseCatService.getAllCats())
       setCats(data)
-      setFilteredCats(data)
     } catch (err) {
       console.error('Error loading cats from Firebase:', err)
       setError('Failed to load cat reports. Please try again.')
@@ -67,45 +121,23 @@ function AppContent() {
     }
   }
 
-  const handleFiltersChange = async (filters) => {
+  const handleFiltersChange = useCallback(async (filters) => {
     setActiveFilters(filters)
+  }, [])
 
-    // Check if any filters are active
-    const hasActiveFilters = Object.values(filters).some(value =>
-      value !== '' && value !== 10
-    )
-
-    if (!hasActiveFilters) {
-      setFilteredCats(cats)
-      return
-    }
-
-    // For now, implement basic client-side filtering
-    // TODO: Implement server-side filtering with Firestore queries
-    let filtered = [...cats]
-
-    if (filters.color && filters.color !== '') {
-      filtered = filtered.filter(cat =>
-        cat.color?.toLowerCase().includes(filters.color.toLowerCase())
-      )
-    }
-
-    if (filters.size && filters.size !== '') {
-      filtered = filtered.filter(cat =>
-        cat.size?.toLowerCase() === filters.size.toLowerCase()
-      )
-    }
-
-    setFilteredCats(filtered)
-  }
-
-  const handleMapClick = (location) => {
+  const handleMapClick = useCallback((location) => {
     setSelectedLocation(location)
     setShowForm(true)
-  }
+  }, [])
+
+  const handleCloseForm = useCallback(() => {
+    setShowForm(false)
+    setSelectedLocation(null)
+  }, [])
 
   const handleAddCat = async (catData) => {
     try {
+      console.log('Adding new cat:', catData)
       // Use location from catData if available (from geolocation), otherwise use selectedLocation
       const locationToUse = catData.location || selectedLocation
 
@@ -119,7 +151,10 @@ function AppContent() {
       // Remove the location object from catData as it's not a database field
       delete newCatData.location
 
-      const newCat = await firebaseCatService.createCat(newCatData)
+      console.log('Submitting cat data to Firebase:', newCatData)
+      const result = await firebaseCatService.createCat(newCatData)
+      console.log('Cat created successfully:', result)
+
       // Real-time subscription will handle adding to the list
       setShowForm(false)
       setSelectedLocation(null)
@@ -127,6 +162,8 @@ function AppContent() {
       // Show success message with different content for anonymous users
       if (!user || user.isAnonymous) {
         alert('Cat report submitted successfully! Thank you for helping the community. Sign up to manage your reports and get updates.')
+      } else {
+        alert('Cat report submitted successfully!')
       }
     } catch (err) {
       console.error('Error adding cat:', err)
@@ -134,10 +171,7 @@ function AppContent() {
     }
   }
 
-  const handleCloseForm = () => {
-    setShowForm(false)
-    setSelectedLocation(null)
-  }
+
 
   if (authLoading || loading) {
     return (
@@ -160,14 +194,23 @@ function AppContent() {
       />
 
       {currentView === 'admin' ? (
-        <AdminDashboard />
+        <Suspense fallback={
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading admin dashboard...</p>
+          </div>
+        }>
+          <AdminDashboard />
+        </Suspense>
       ) : (
         <main className="main-content">
           <div className="map-container">
-            <CatMap
-              cats={filteredCats}
-              onMapClick={handleMapClick}
-            />
+            <Suspense fallback={<LoadingSkeleton type="map" />}>
+              <CatMap
+                cats={filteredCats}
+                onMapClick={handleMapClick}
+              />
+            </Suspense>
           </div>
 
         <div className="info-panel">
@@ -192,10 +235,12 @@ function AppContent() {
           </div>
 
           {showFilters && (
-            <SearchFilters
-              onFiltersChange={handleFiltersChange}
-              onClose={() => setShowFilters(false)}
-            />
+            <Suspense fallback={<div>Loading filters...</div>}>
+              <SearchFilters
+                onFiltersChange={handleFiltersChange}
+                onClose={() => setShowFilters(false)}
+              />
+            </Suspense>
           )}
 
           <div className="stats">
@@ -226,18 +271,26 @@ function AppContent() {
       )}
 
       {showForm && (
-        <CatForm
-          location={selectedLocation}
-          onSubmit={handleAddCat}
-          onClose={handleCloseForm}
-        />
+        <Suspense fallback={
+          <div className="modal-overlay">
+            <LoadingSkeleton type="form" />
+          </div>
+        }>
+          <CatForm
+            location={selectedLocation}
+            onSubmit={handleAddCat}
+            onClose={handleCloseForm}
+          />
+        </Suspense>
       )}
 
-      <AuthModal
-        isOpen={showAuthPrompt}
-        onClose={() => setShowAuthPrompt(false)}
-        initialMode="signup"
-      />
+      <Suspense fallback={null}>
+        <AuthModal
+          isOpen={showAuthPrompt}
+          onClose={() => setShowAuthPrompt(false)}
+          initialMode="signup"
+        />
+      </Suspense>
 
       <MobileDebugInfo />
     </div>
@@ -247,7 +300,6 @@ function AppContent() {
 function App() {
   return (
     <FirebaseAuthProvider>
-      <SetupNotification />
       <AppContent />
     </FirebaseAuthProvider>
   )

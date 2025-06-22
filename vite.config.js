@@ -19,9 +19,9 @@ export default defineConfig({
         manualChunks: {
           // Vendor chunks for better caching
           vendor: ['react', 'react-dom'],
-          supabase: ['@supabase/supabase-js'],
+          firebase: ['firebase'],
           leaflet: ['leaflet', 'react-leaflet'],
-          utils: ['date-fns', 'lucide-react']
+          utils: ['date-fns', 'lucide-react', 'react-hook-form']
         },
         // Optimize chunk file names
         chunkFileNames: 'assets/[name]-[hash].js',

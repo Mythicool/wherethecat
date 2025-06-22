@@ -204,6 +204,9 @@ function CatForm({ location, onSubmit, onClose }) {
       delete catData.date_spotted
 
       await onSubmit(catData)
+
+      // Close the form after successful submission
+      onClose()
     } catch (error) {
       console.error('Error submitting form:', error)
       alert('Failed to submit cat report. Please try again.')

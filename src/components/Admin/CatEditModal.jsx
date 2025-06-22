@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { X, Save, MapPin } from 'lucide-react'
-import { supabase } from '../../lib/supabase'
+import { firebaseCatService } from '../../services/firebaseCatService'
 import './CatEditModal.css'
 
 function CatEditModal({ cat, onSave, onClose }) {

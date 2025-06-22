@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { 
-  Search, 
-  Filter, 
-  Edit, 
-  Trash2, 
-  Eye, 
+import {
+  Search,
+  Filter,
+  Edit,
+  Trash2,
+  Eye,
   MapPin,
   Calendar,
   User,
@@ -13,7 +13,7 @@ import {
   XCircle,
   Archive
 } from 'lucide-react'
-import { supabase } from '../../lib/supabase'
+import { firebaseCatService } from '../../services/firebaseCatService'
 import CatEditModal from './CatEditModal'
 import './CatManagement.css'
 

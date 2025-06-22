@@ -8,6 +8,9 @@
   /* Prevent horizontal scroll on mobile */
   overflow-x: hidden;
   width: 100%;
+  /* Performance optimizations */
+  will-change: auto;
+  contain: layout style paint;
 }
 
 .main-content {
@@ -22,6 +25,9 @@
 .map-container {
   flex: 1;
   position: relative;
+  /* Performance optimizations for map rendering */
+  will-change: transform;
+  contain: layout style paint;
 }
 
 .info-panel {
@@ -134,6 +140,9 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
+  /* Performance optimizations */
+  will-change: opacity;
+  contain: layout style paint;
 }
 
 .loading-spinner {
@@ -143,11 +152,14 @@
   border-top: 4px solid #4299e1;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  /* GPU acceleration */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg) translateZ(0); }
+  100% { transform: rotate(360deg) translateZ(0); }
 }
 
 .error-message {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Edit, Trash2, MapPin, Calendar, Eye, X } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
-import { catService } from '../services/catService'
+import { useFirebaseAuth } from '../contexts/FirebaseAuthContext'
+import { firebaseCatService } from '../services/firebaseCatService'
 // import { formatDistanceToNow } from 'date-fns'
 
 // Simple date formatting function to avoid external dependency
@@ -23,7 +23,7 @@ const formatDistanceToNow = (date) => {
 import './UserReports.css'
 
 function UserReports({ onClose }) {
-  const { user } = useAuth()
+  const { user } = useFirebaseAuth()
   const [reports, setReports] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -39,7 +39,7 @@ function UserReports({ onClose }) {
     try {
       setLoading(true)
       setError('')
-      const userReports = await catService.getCatsByUser(user.id)
+      const userReports = await firebaseCatService.getCatsByUser(user.uid)
       setReports(userReports)
     } catch (err) {
       console.error('Error loading user reports:', err)
@@ -55,7 +55,7 @@ function UserReports({ onClose }) {
     }
 
     try {
-      await catService.deleteCat(reportId)
+      await firebaseCatService.deleteCat(reportId)
       setReports(prev => prev.filter(report => report.id !== reportId))
       setSelectedReport(null)
     } catch (err) {
@@ -66,8 +66,8 @@ function UserReports({ onClose }) {
 
   const handleStatusChange = async (reportId, newStatus) => {
     try {
-      await catService.updateCat(reportId, { status: newStatus })
-      setReports(prev => prev.map(report => 
+      await firebaseCatService.updateCat(reportId, { status: newStatus })
+      setReports(prev => prev.map(report =>
         report.id === reportId ? { ...report, status: newStatus } : report
       ))
     } catch (err) {
