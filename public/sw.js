@@ -13,7 +13,7 @@ const STATIC_FILES = [
 
 // API endpoints that should be cached
 const API_CACHE_PATTERNS = [
-  /^https:\/\/.*\.supabase\.co\/rest\/v1\/cats/,
+  /^https:\/\/firestore\.googleapis\.com/,
   /^https:\/\/nominatim\.openstreetmap\.org/,
 ]
 

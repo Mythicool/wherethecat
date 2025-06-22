@@ -5,6 +5,16 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
 
+  // Optimize dependencies
+  optimizeDeps: {
+    include: [
+      'firebase/app',
+      'firebase/auth',
+      'firebase/firestore',
+      'firebase/storage'
+    ]
+  },
+
   // Build optimizations for mobile performance
   build: {
     // Generate source maps for debugging in production
@@ -19,7 +29,6 @@ export default defineConfig({
         manualChunks: {
           // Vendor chunks for better caching
           vendor: ['react', 'react-dom'],
-          firebase: ['firebase'],
           leaflet: ['leaflet', 'react-leaflet'],
           utils: ['date-fns', 'lucide-react', 'react-hook-form']
         },
