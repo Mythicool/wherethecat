@@ -20,8 +20,20 @@ export const authService = {
   // Sign in with Google (try popup first, fallback to redirect)
   async signInWithGoogle() {
     try {
-      // Try popup first
+      console.log('Attempting Google sign-in with popup...')
+
+      // Check if we're in a mobile environment or if popups are likely to be blocked
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
+      if (isMobile) {
+        console.log('Mobile detected, using redirect flow')
+        await signInWithRedirect(auth, googleProvider)
+        return null // Will be handled by redirect result
+      }
+
+      // Try popup first for desktop
       const result = await signInWithPopup(auth, googleProvider)
+      console.log('Popup sign-in successful:', result)
       const user = result.user
 
       // Create or update user document in Firestore
@@ -32,7 +44,11 @@ export const authService = {
       console.error('Popup failed, trying redirect:', error)
 
       // If popup fails, try redirect
-      if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+      if (error.code === 'auth/popup-blocked' ||
+          error.code === 'auth/popup-closed-by-user' ||
+          error.code === 'auth/network-request-failed' ||
+          error.message.includes('CSP')) {
+        console.log('Falling back to redirect flow')
         await signInWithRedirect(auth, googleProvider)
         return null // Will be handled by redirect result
       }

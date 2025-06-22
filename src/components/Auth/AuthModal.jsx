@@ -75,11 +75,36 @@ function AuthModal({ isOpen, onClose }) {
     try {
       setLoading(true)
       setError('')
-      await signInWithGoogle()
-      onClose()
+      console.log('Starting Google sign-in...')
+
+      const result = await signInWithGoogle()
+      console.log('Google sign-in result:', result)
+
+      if (result) {
+        console.log('Google sign-in successful, closing modal')
+        onClose()
+      } else {
+        console.log('Google sign-in returned null (redirect flow)')
+        // Don't close modal for redirect flow
+      }
     } catch (err) {
       console.error('Google sign in error:', err)
-      setError('Failed to sign in with Google. Please try again.')
+      console.error('Error code:', err.code)
+      console.error('Error message:', err.message)
+
+      let errorMessage = 'Failed to sign in with Google. Please try again.'
+
+      if (err.code === 'auth/popup-blocked') {
+        errorMessage = 'Popup was blocked. Please allow popups for this site and try again.'
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        errorMessage = 'Sign-in was cancelled. Please try again.'
+      } else if (err.code === 'auth/network-request-failed') {
+        errorMessage = 'Network error. Please check your connection and try again.'
+      } else if (err.message.includes('CSP')) {
+        errorMessage = 'Security policy error. Please refresh the page and try again.'
+      }
+
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

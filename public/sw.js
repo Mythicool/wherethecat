@@ -22,7 +22,11 @@ const NO_CACHE_PATTERNS = [
   /^https:\/\/apis\.google\.com/,
   /^https:\/\/accounts\.google\.com/,
   /^https:\/\/www\.gstatic\.com/,
+  /^https:\/\/ssl\.gstatic\.com/,
+  /^https:\/\/www\.google\.com/,
   /^https:\/\/.*\.googleapis\.com/,
+  /^https:\/\/.*\.firebaseapp\.com/,
+  /^https:\/\/securetoken\.googleapis\.com/,
 ]
 
 // Install event - cache static files
